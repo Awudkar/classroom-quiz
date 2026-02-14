@@ -17,13 +17,8 @@ body { padding:20px; }
 
 <!-- Lecturer Panel -->
 <div id="lecturerPanel" class="card p-3 mb-3">
-fetch('quiz.txt')
-  .then(response => response.text())
-  .then(data => {
-      questions = parseQuiz(data);
-      document.getElementById("studentInfo").classList.remove("hidden");
-      document.getElementById("lecturerPanel").classList.add("hidden");
-  });
+<h4>Quiz Loaded</h4>
+    <button type="button" class="btn btn-primary" onclick="loadQuiz()">Load Quiz</button>
 </div>
 
 <!-- Student Info -->
@@ -61,16 +56,17 @@ let submissions = [];
 
 // ------------------ Load Quiz ------------------
 function loadQuiz() {
-    const file = document.getElementById("quizFile").files[0];
-    if (!file) return alert("Upload quiz file");
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        questions = parseQuiz(e.target.result);
+    // Fetch quiz.txt directly from GitHub Pages
+    fetch('quiz.txt')
+    .then(response => response.text())
+    .then(data => {
+        questions = parseQuiz(data);
+        // Show student info panel
         document.getElementById("studentInfo").classList.remove("hidden");
+        // Hide lecturer panel
         document.getElementById("lecturerPanel").classList.add("hidden");
-    };
-    reader.readAsText(file);
+    })
+    .catch(err => alert("Could not load quiz: " + err));
 }
 
 // ------------------ Parse Quiz ------------------
@@ -213,4 +209,5 @@ function shuffleArray(arr) {
 </script>
 </body>
 </html>
+
 
