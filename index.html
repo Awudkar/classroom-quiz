@@ -81,7 +81,13 @@ function renderQuiz() {
         q.options.forEach((opt, j) => {
             const letter = String.fromCharCode(97 + j); // a,b,c,d
             html += `<div>
-                <input type="radio" name="question${i}" value="${j}"> ${letter}. ${opt}
+                <!-- <input type="radio" name="question${i}" value="${j}"> ${letter}. ${opt} -->
+                <button type="button" class="btn btn-success mt-3" onclick="submitQuiz(
+                  document.getElementById('studentId').value,
+                  document.getElementById('studentName').value,
+                  document.getElementById('course').value
+)">Submit Quiz</button>
+
             </div>`;
         });
         html += `</div>`;
@@ -131,4 +137,5 @@ function shuffleArray(arr) {
     }
     return arr;
 }
+
 
