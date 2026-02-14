@@ -31,14 +31,14 @@ body { padding:20px; }
 <input type="text" id="studentId" placeholder="Student ID" class="form-control mb-2" required>
 <input type="text" id="studentName" placeholder="Full Name" class="form-control mb-2" required>
 <input type="text" id="course" placeholder="Course" class="form-control mb-2" required>
-<button class="btn btn-success" onclick="startQuiz()">Start Quiz</button>
+<button type="button" class="btn btn-success" onclick="startQuiz()">Start Quiz</button>
 </div>
 
 <!-- Quiz Section -->
 <div id="quizSection" class="hidden">
 <div class="timer mb-3">Time Left: <span id="timeLeft"></span></div>
 <form id="quizForm"></form>
-<button type="button" class="btn btn-success" onclick="submitQuiz()">Submit Quiz</button> 
+<button type="button" class="btn btn-success mt-3" onclick="submitQuiz()">Submit Quiz</button> 
 <!-- <button type="button" onclick="submitQuiz()">Submit Quiz</button> -->
 </div>
 
@@ -111,8 +111,6 @@ function parseQuiz(text) {
     return shuffleArray(questions); // Randomize question order
 }
 
-
-
 function startQuiz() {
     if (!studentId.value || !studentName.value || !course.value)
         return alert("Fill all fields");
@@ -123,28 +121,37 @@ function startQuiz() {
     renderQuiz();
 
     timeRemaining = document.getElementById("quizTime").value * 60;
-    timer = setInterval(updateTimer, 1000);
+    document.getElementById("timeLeft").innerText = `${Math.floor(timeRemaining/60)}:${(timeRemaining%60).toString().padStart(2,'0')}`;
+
+    timer = setInterval(() => {
+        timeRemaining--;
+        document.getElementById("timeLeft").innerText = `${Math.floor(timeRemaining/60)}:${(timeRemaining%60).toString().padStart(2,'0')}`;
+        if (timeRemaining <= 0) {
+            clearInterval(timer);
+            submitQuiz();
+        }
+    }, 1000);
 }
 
-function renderQuiz() {
-    const form = document.getElementById("quizForm");
-    form.innerHTML = "";
 
-    quizData.forEach((q, index) => {
+function renderQuiz() {
+    const container = document.getElementById("quizForm");
+    container.innerHTML = "";  // clear previous content
+
+    questions.forEach((q, index) => {
         let html = `<div class="card p-3 mb-2">
-        <strong>${index+1}. ${q.question}</strong><br>`;
+        <strong>${index + 1}. ${q.question}</strong><br>`;
 
         q.options.forEach((opt, i) => {
-            let letter = String.fromCharCode(97 + i);
+            let letter = String.fromCharCode(97 + i); // a, b, c, d
             html += `
             <div>
-            <input type="radio" name="question${index}" value="${optionIndex}"> 
-            ${letter}. ${opt}
+            <input type="radio" name="question${index}" value="${i}"> ${letter}. ${opt}
             </div>`;
         });
 
         html += `</div>`;
-        form.innerHTML += html;
+        container.innerHTML += html;
     });
 }
 
@@ -224,6 +231,7 @@ function shuffleArray(array) {
 
 </body>
 </html>
+
 
 
 
