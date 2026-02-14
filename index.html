@@ -78,31 +78,38 @@ function parseQuiz(text) {
             .map(l => l.trim())
             .filter(l => l !== "");
 
-        if (lines.length === 5) {  // 1 question + 4 options only
+        if (lines.length === 5) {
             const questionText = lines[0].replace(/^Q\d+\.\s*/, "");
-            let options = [];
-            let correctIndex = -1;
 
-            lines.slice(1).forEach((line, index) => {
+            let options = [];
+            let correctAnswerText = "";
+
+            lines.slice(1).forEach(line => {
                 if (line.includes("*")) {
-                    correctIndex = index;
-                    line = line.replace("*", "").trim();
+                    correctAnswerText = line.replace("*", "").trim();
+                    options.push(correctAnswerText);
+                } else {
+                    options.push(line.trim());
                 }
-                options.push(line);
             });
 
-            if (correctIndex !== -1) {
-                questions.push({
-                    question: questionText,
-                    options: options,
-                    answer: correctIndex
-                });
-            }
+            // Randomize options
+            options = shuffleArray(options);
+
+            // Find new correct index after shuffle
+            const correctIndex = options.indexOf(correctAnswerText);
+
+            questions.push({
+                question: questionText,
+                options: options,
+                answer: correctIndex
+            });
         }
     });
 
-    return questions;
+    return shuffleArray(questions); // Randomize question order
 }
+
 
 
 function startQuiz() {
@@ -207,10 +214,16 @@ function downloadCSV() {
 }
 
 function shuffleArray(array) {
-    return array.sort(() => Math.random() - 0.5);
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
 }
+
 </script>
 
 </body>
 </html>
+
 
