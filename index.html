@@ -15,10 +15,10 @@ body { padding:20px; }
 
 <h2 class="text-center mb-4">Classroom Quiz System</h2>
 
-<!-- Lecturer Panel -->
+<!-- Load Quiz Button -->
 <div id="lecturerPanel" class="card p-3 mb-3">
-<h4>Quiz Loaded</h4>
-    <button type="button" class="btn btn-primary" onclick="loadQuiz()">Load Quiz</button>
+<h4>Load Quiz</h4>
+<button type="button" class="btn btn-primary" onclick="loadQuiz()">Load Quiz</button>
 </div>
 
 <!-- Student Info -->
@@ -27,6 +27,8 @@ body { padding:20px; }
 <input type="text" id="studentId" placeholder="Student ID" class="form-control mb-2" required>
 <input type="text" id="studentName" placeholder="Full Name" class="form-control mb-2" required>
 <input type="text" id="course" placeholder="Course" class="form-control mb-2" required>
+<label>Time (minutes)</label>
+<input type="number" id="quizTime" class="form-control mb-2" value="10">
 <button type="button" class="btn btn-success" onclick="startQuiz()">Start Quiz</button>
 </div>
 
@@ -54,16 +56,13 @@ let timer;
 let timeRemaining;
 let submissions = [];
 
-// ------------------ Load Quiz ------------------
+// ------------------ Load Quiz from quiz.txt ------------------
 function loadQuiz() {
-    // Fetch quiz.txt directly from GitHub Pages
     fetch('quiz.txt')
     .then(response => response.text())
     .then(data => {
         questions = parseQuiz(data);
-        // Show student info panel
         document.getElementById("studentInfo").classList.remove("hidden");
-        // Hide lecturer panel
         document.getElementById("lecturerPanel").classList.add("hidden");
     })
     .catch(err => alert("Could not load quiz: " + err));
@@ -122,7 +121,6 @@ function startQuiz() {
         timeRemaining--;
         document.getElementById("timeLeft").innerText =
             `${Math.floor(timeRemaining/60)}:${(timeRemaining%60).toString().padStart(2,'0')}`;
-
         if (timeRemaining <= 0) {
             clearInterval(timer);
             submitQuiz(studentId, studentName, course);
@@ -137,14 +135,12 @@ function renderQuiz() {
 
     questions.forEach((q, i) => {
         let html = `<div class="card p-3 mb-2"><strong>${i+1}. ${q.question}</strong><br>`;
-
         q.options.forEach((opt, j) => {
-            const letter = String.fromCharCode(97 + j); // a,b,c,d
+            const letter = String.fromCharCode(97 + j);
             html += `<div>
 <input type="radio" name="question${i}" value="${j}"> ${letter}. ${opt}
 </div>`;
         });
-
         html += `</div>`;
         container.innerHTML += html;
     });
@@ -176,12 +172,10 @@ Correct: ${correctAnswer}
     document.getElementById("quizSection").classList.add("hidden");
     document.getElementById("resultSection").innerHTML = `<h4>Score: ${score} / ${questions.length}</h4>` + resultHTML;
 
-    // Save submission for CSV
     const percentage = ((score / questions.length) * 100).toFixed(2);
     submissions.push({ id: studentId, name: studentName, course: course, score, total: questions.length, percentage });
     document.getElementById("downloadBtn").classList.remove("hidden");
 
-    // Lock options
     document.querySelectorAll("input[type=radio]").forEach(r => r.disabled = true);
 }
 
@@ -209,5 +203,3 @@ function shuffleArray(arr) {
 </script>
 </body>
 </html>
-
-
