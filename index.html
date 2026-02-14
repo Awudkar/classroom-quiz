@@ -69,29 +69,41 @@ function loadQuiz() {
 }
 
 function parseQuiz(text) {
-    let questions = [];
-    let blocks = text.split("\n\n");
+    const blocks = text.trim().split(/\n\s*\n/);
+    const questions = [];
 
     blocks.forEach(block => {
-        let lines = block.split("\n");
-        let q = { question: lines[0], options: [], correct: "" };
+        const lines = block
+            .split("\n")
+            .map(l => l.trim())
+            .filter(l => l !== "");
 
-        lines.slice(1).forEach(line => {
-            if (line.includes("*")) {
-                let clean = line.replace("*","").trim();
-                q.correct = clean;
-                q.options.push(clean);
-            } else {
-                q.options.push(line.trim());
+        if (lines.length === 5) {  // 1 question + 4 options only
+            const questionText = lines[0].replace(/^Q\d+\.\s*/, "");
+            let options = [];
+            let correctIndex = -1;
+
+            lines.slice(1).forEach((line, index) => {
+                if (line.includes("*")) {
+                    correctIndex = index;
+                    line = line.replace("*", "").trim();
+                }
+                options.push(line);
+            });
+
+            if (correctIndex !== -1) {
+                questions.push({
+                    question: questionText,
+                    options: options,
+                    answer: correctIndex
+                });
             }
-        });
-
-        q.options = shuffleArray(q.options);
-        questions.push(q);
+        }
     });
 
     return questions;
 }
+
 
 function startQuiz() {
     if (!studentId.value || !studentName.value || !course.value)
@@ -201,3 +213,4 @@ function shuffleArray(array) {
 
 </body>
 </html>
+
