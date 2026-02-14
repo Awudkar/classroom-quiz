@@ -89,46 +89,27 @@ function renderQuiz() {
     });
 }
 
-function submitQuiz(studentId, studentName, course) {
-    clearInterval(timer);
-
-    let score = 0;
-    let resultHTML = "";
+function renderQuiz() {
+    const container = document.getElementById("quizForm");
+    container.innerHTML = ""; // clear previous content
 
     questions.forEach((q, i) => {
-        const selected = document.querySelector(`input[name="question${i}"]:checked`);
-        const selectedIndex = selected ? parseInt(selected.value) : null;
-        const correctAnswer = q.options[q.answer];
+        let html = `<div class="card p-3 mb-2">
+<strong>${i+1}. ${q.question}</strong><br>`;
 
-        const userAnswer = selectedIndex !== null ? q.options[selectedIndex] : "Not Answered";
-        if (selectedIndex === q.answer) score++;
+        q.options.forEach((opt, j) => {
+            const letter = String.fromCharCode(97 + j); // a,b,c,d
+            html += `
+<div>
+  <input type="radio" name="question${i}" value="${j}"> ${letter}. ${opt}
+</div>`;
+        });
 
-        resultHTML += `<div class="card p-2 mb-2">
-            <strong>${i+1}. ${q.question}</strong><br>
-            Your Answer: ${userAnswer}<br>
-            Correct: ${correctAnswer}
-        </div>`;
+        html += `</div>`;
+        container.innerHTML += html;
     });
-
-    document.getElementById("resultSection").classList.remove("hidden");
-    document.getElementById("quizSection").classList.add("hidden");
-    document.getElementById("resultSection").innerHTML = `<h4>Score: ${score} / ${questions.length}</h4>` + resultHTML;
-
-    // Save submission for CSV
-    const percentage = ((score / questions.length) * 100).toFixed(2);
-    submissions.push({
-        id: studentId,
-        name: studentName,
-        course: course,
-        score: score,
-        total: questions.length,
-        percentage: percentage
-    });
-    document.getElementById("downloadBtn").classList.remove("hidden");
-
-    // Lock options
-    document.querySelectorAll("input[type=radio]").forEach(r => r.disabled = true);
 }
+
 
 function downloadCSV() {
     let csv = "StudentID,Name,Course,Score,Total,Percentage\n";
@@ -150,3 +131,4 @@ function shuffleArray(arr) {
     }
     return arr;
 }
+
