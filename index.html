@@ -137,7 +137,7 @@ function renderQuiz() {
             let letter = String.fromCharCode(97 + i);
             html += `
             <div>
-            <input type="radio" name="q${index}" value="${opt}"> 
+            <input type="radio" name="question${index}" value="${optionIndex}"> 
             ${letter}. ${opt}
             </div>`;
         });
@@ -223,6 +223,7 @@ function shuffleArray(array) {
 
 </body>
 </html>
+
 
 
 
