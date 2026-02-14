@@ -159,46 +159,45 @@ function updateTimer() {
 }
 
 function submitQuiz() {
-    clearInterval(timer);
-
     let score = 0;
-    let answersHTML = "";
+    let resultHTML = "";
 
-    quizData.forEach((q, index) => {
-        let selected = document.querySelector(`input[name="q${index}"]:checked`);
-        let answer = selected ? selected.value : "Not Answered";
+    questions.forEach((q, index) => {
+        const selected = document.querySelector(
+            `input[name="question${index}"]:checked`
+        );
 
-        if (answer === q.correct) score++;
+        const selectedValue = selected ? parseInt(selected.value) : null;
 
-        answersHTML += `
-        <div class="card p-2 mb-2">
-        <strong>${index+1}. ${q.question}</strong><br>
-        Your Answer: ${answer}<br>
-        Correct: ${q.correct}
-        </div>`;
+        const correctAnswerText = q.options[q.answer];
+
+        resultHTML += `<div style="margin-bottom:15px;">`;
+        resultHTML += `<strong>${index + 1}. ${q.question}</strong><br>`;
+
+        if (selectedValue !== null) {
+            const userAnswerText = q.options[selectedValue];
+
+            if (selectedValue === q.answer) {
+                score++;
+            }
+
+            resultHTML += `Your Answer: ${userAnswerText}<br>`;
+            resultHTML += `Correct: ${correctAnswerText}<br>`;
+        } else {
+            resultHTML += `You did not answer this question.<br>`;
+            resultHTML += `Correct: ${correctAnswerText}<br>`;
+        }
+
+        resultHTML += `</div>`;
     });
 
-    let percentage = ((score/quizData.length)*100).toFixed(2);
+    document.getElementById("result").innerHTML =
+        `<h4>Your Score: ${score} / ${questions.length}</h4>` + resultHTML;
 
-    submissions.push({
-        id: studentId.value,
-        name: studentName.value,
-        course: course.value,
-        score: score,
-        total: quizData.length,
-        percentage: percentage
-    });
-
-    document.getElementById("quizSection").classList.add("hidden");
-    document.getElementById("resultSection").classList.remove("hidden");
-    document.getElementById("downloadBtn").classList.remove("hidden");
-
-    resultSection.innerHTML = `
-    <div class="alert alert-info">
-    <h4>Score: ${score}/${quizData.length}</h4>
-    <h5>Percentage: ${percentage}%</h5>
-    </div>` + answersHTML;
+    // Disable further changes
+    document.querySelectorAll("input[type=radio]").forEach(r => r.disabled = true);
 }
+
 
 function downloadCSV() {
     let csv = "StudentID,Name,Course,Score,Total,Percentage\n";
@@ -225,5 +224,6 @@ function shuffleArray(array) {
 
 </body>
 </html>
+
 
 
