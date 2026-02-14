@@ -1,8 +1,63 @@
-let questions = [];  // Use only this variable everywhere
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Classroom Quiz</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+body { padding:20px; }
+.hidden { display:none; }
+.timer { font-size:20px; font-weight:bold; color:red; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h2 class="text-center mb-4">Classroom Quiz System</h2>
+
+<!-- Lecturer Panel -->
+<div id="lecturerPanel" class="card p-3 mb-3">
+<h4>Lecturer Upload Quiz</h4>
+<input type="file" id="quizFile" class="form-control mb-2">
+<label>Time (minutes)</label>
+<input type="number" id="quizTime" class="form-control mb-2" value="10">
+<button type="button" class="btn btn-primary" onclick="loadQuiz()">Activate Quiz</button>
+</div>
+
+<!-- Student Info -->
+<div id="studentInfo" class="card p-3 mb-3 hidden">
+<h4>Student Information</h4>
+<input type="text" id="studentId" placeholder="Student ID" class="form-control mb-2" required>
+<input type="text" id="studentName" placeholder="Full Name" class="form-control mb-2" required>
+<input type="text" id="course" placeholder="Course" class="form-control mb-2" required>
+<button type="button" class="btn btn-success" onclick="startQuiz()">Start Quiz</button>
+</div>
+
+<!-- Quiz Section -->
+<div id="quizSection" class="hidden">
+<div class="timer mb-3">Time Left: <span id="timeLeft"></span></div>
+<div id="quizForm"></div>
+<button type="button" class="btn btn-success mt-3" onclick="submitQuiz(
+  document.getElementById('studentId').value,
+  document.getElementById('studentName').value,
+  document.getElementById('course').value
+)">Submit Quiz</button>
+</div>
+
+<!-- Result Section -->
+<div id="resultSection" class="hidden"></div>
+
+<button type="button" class="btn btn-secondary mt-3 hidden" id="downloadBtn" onclick="downloadCSV()">Download Results CSV</button>
+
+</div>
+
+<script>
+let questions = [];
 let timer;
 let timeRemaining;
 let submissions = [];
 
+// ------------------ Load Quiz ------------------
 function loadQuiz() {
     const file = document.getElementById("quizFile").files[0];
     if (!file) return alert("Upload quiz file");
@@ -16,13 +71,14 @@ function loadQuiz() {
     reader.readAsText(file);
 }
 
+// ------------------ Parse Quiz ------------------
 function parseQuiz(text) {
     const blocks = text.trim().split(/\n\s*\n/);
     const qs = [];
 
     blocks.forEach(block => {
         const lines = block.split("\n").map(l => l.trim()).filter(l => l !== "");
-        if (lines.length !== 5) return;  // 1 question + 4 options
+        if (lines.length !== 5) return; // 1 question + 4 options
 
         const questionText = lines[0].replace(/^Q\d+\.\s*/, "");
         let opts = [];
@@ -46,6 +102,7 @@ function parseQuiz(text) {
     return shuffleArray(qs);
 }
 
+// ------------------ Start Quiz ------------------
 function startQuiz() {
     const studentId = document.getElementById("studentId").value;
     const studentName = document.getElementById("studentName").value;
@@ -60,11 +117,14 @@ function startQuiz() {
     renderQuiz();
 
     timeRemaining = parseInt(document.getElementById("quizTime").value) * 60;
-    document.getElementById("timeLeft").innerText = `${Math.floor(timeRemaining/60)}:${(timeRemaining%60).toString().padStart(2,'0')}`;
+    document.getElementById("timeLeft").innerText =
+        `${Math.floor(timeRemaining/60)}:${(timeRemaining%60).toString().padStart(2,'0')}`;
 
     timer = setInterval(() => {
         timeRemaining--;
-        document.getElementById("timeLeft").innerText = `${Math.floor(timeRemaining/60)}:${(timeRemaining%60).toString().padStart(2,'0')}`;
+        document.getElementById("timeLeft").innerText =
+            `${Math.floor(timeRemaining/60)}:${(timeRemaining%60).toString().padStart(2,'0')}`;
+
         if (timeRemaining <= 0) {
             clearInterval(timer);
             submitQuiz(studentId, studentName, course);
@@ -72,42 +132,18 @@ function startQuiz() {
     }, 1000);
 }
 
+// ------------------ Render Quiz ------------------
 function renderQuiz() {
     const container = document.getElementById("quizForm");
     container.innerHTML = "";
 
     questions.forEach((q, i) => {
         let html = `<div class="card p-3 mb-2"><strong>${i+1}. ${q.question}</strong><br>`;
+
         q.options.forEach((opt, j) => {
             const letter = String.fromCharCode(97 + j); // a,b,c,d
             html += `<div>
-                <!-- <input type="radio" name="question${i}" value="${j}"> ${letter}. ${opt} -->
-                <button type="button" class="btn btn-success mt-3" onclick="submitQuiz(
-                  document.getElementById('studentId').value,
-                  document.getElementById('studentName').value,
-                  document.getElementById('course').value
-)">Submit Quiz</button>
-
-            </div>`;
-        });
-        html += `</div>`;
-        container.innerHTML += html;
-    });
-}
-
-function renderQuiz() {
-    const container = document.getElementById("quizForm");
-    container.innerHTML = ""; // clear previous content
-
-    questions.forEach((q, i) => {
-        let html = `<div class="card p-3 mb-2">
-<strong>${i+1}. ${q.question}</strong><br>`;
-
-        q.options.forEach((opt, j) => {
-            const letter = String.fromCharCode(97 + j); // a,b,c,d
-            html += `
-<div>
-  <input type="radio" name="question${i}" value="${j}"> ${letter}. ${opt}
+<input type="radio" name="question${i}" value="${j}"> ${letter}. ${opt}
 </div>`;
         });
 
@@ -116,13 +152,47 @@ function renderQuiz() {
     });
 }
 
+// ------------------ Submit Quiz ------------------
+function submitQuiz(studentId, studentName, course) {
+    clearInterval(timer);
 
+    let score = 0;
+    let resultHTML = "";
+
+    questions.forEach((q, i) => {
+        const selected = document.querySelector(`input[name="question${i}"]:checked`);
+        const selectedIndex = selected ? parseInt(selected.value) : null;
+        const correctAnswer = q.options[q.answer];
+        const userAnswer = selectedIndex !== null ? q.options[selectedIndex] : "Not Answered";
+
+        if (selectedIndex === q.answer) score++;
+
+        resultHTML += `<div class="card p-2 mb-2">
+<strong>${i+1}. ${q.question}</strong><br>
+Your Answer: ${userAnswer}<br>
+Correct: ${correctAnswer}
+</div>`;
+    });
+
+    document.getElementById("resultSection").classList.remove("hidden");
+    document.getElementById("quizSection").classList.add("hidden");
+    document.getElementById("resultSection").innerHTML = `<h4>Score: ${score} / ${questions.length}</h4>` + resultHTML;
+
+    // Save submission for CSV
+    const percentage = ((score / questions.length) * 100).toFixed(2);
+    submissions.push({ id: studentId, name: studentName, course: course, score, total: questions.length, percentage });
+    document.getElementById("downloadBtn").classList.remove("hidden");
+
+    // Lock options
+    document.querySelectorAll("input[type=radio]").forEach(r => r.disabled = true);
+}
+
+// ------------------ Download CSV ------------------
 function downloadCSV() {
     let csv = "StudentID,Name,Course,Score,Total,Percentage\n";
     submissions.forEach(s => {
         csv += `${s.id},${s.name},${s.course},${s.score},${s.total},${s.percentage}%\n`;
     });
-
     const blob = new Blob([csv], {type:"text/csv"});
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
@@ -130,6 +200,7 @@ function downloadCSV() {
     link.click();
 }
 
+// ------------------ Shuffle Array ------------------
 function shuffleArray(arr) {
     for (let i = arr.length-1; i>0; i--) {
         const j = Math.floor(Math.random() * (i+1));
@@ -137,5 +208,6 @@ function shuffleArray(arr) {
     }
     return arr;
 }
-
-
+</script>
+</body>
+</html>
