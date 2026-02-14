@@ -17,11 +17,13 @@ body { padding:20px; }
 
 <!-- Lecturer Panel -->
 <div id="lecturerPanel" class="card p-3 mb-3">
-<h4>Lecturer Upload Quiz</h4>
-<input type="file" id="quizFile" class="form-control mb-2">
-<label>Time (minutes)</label>
-<input type="number" id="quizTime" class="form-control mb-2" value="10">
-<button type="button" class="btn btn-primary" onclick="loadQuiz()">Activate Quiz</button>
+fetch('quiz.txt')
+  .then(response => response.text())
+  .then(data => {
+      questions = parseQuiz(data);
+      document.getElementById("studentInfo").classList.remove("hidden");
+      document.getElementById("lecturerPanel").classList.add("hidden");
+  });
 </div>
 
 <!-- Student Info -->
@@ -211,3 +213,4 @@ function shuffleArray(arr) {
 </script>
 </body>
 </html>
+
