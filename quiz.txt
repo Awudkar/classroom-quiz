@@ -1,11 +1,423 @@
-What is 2 + 2?
-3
-4*
-5
-6
+A sequence of stored instructions executed by the computer is known as:
+Intelligence
+Program*
+Creative art
+Data 
 
-Capital of Ghana?
-Accra*
-Kumasi
-Tamale
-Cape Coast
+A step-by-step way of solving a problem or performing a task in coding is: 
+Implementation
+Software
+Algorithm*
+Technology 
+
+When you make a mistake in your lines of code, Python throws a …………… error at you.
+Grammatical
+Syntax*
+Critical 
+Network 
+
+Instructions or a code for Python to execute can be done through 
+Paper and pen 
+Interactive mode and scripts*
+Word and spreadsheet
+Data and information
+
+In interactive mode, instructions are written directly to Python to run while in scripts, instructions are written in a file and Python runs the instruction from the file.
+True*
+False
+
+Python’s default programming text editor is 
+IDLE*
+IDE
+Atom
+PyCharm
+
+A named location in memory where a program(mer) can store data and later retrieve using the name when the program is running is called
+Constant
+Variable*
+Expression
+Statement 
+
+You can change the content of a variable 
+False
+True*
+True but debatable
+False but debatable
+
+The variable names spam and Spam are the same    
+True 
+False*
+True but debatable
+False but debatable
+
+Reserved words are names that you cannot use as your variable names
+True*
+False
+True but debatable
+False but debatable
+
+Python works through mathematical expressions implicitly using 
+Precedence rule*
+Grammatical rule
+Kinetic rule 
+Magic rule
+
+When we receive a number from the user through the input() function, we must convert it from string to a number type before we can use it for calculation.
+True*
+False
+True but debatable
+False but debatable
+
+What function is used to prompt the user to enter some string data?
+The print() function
+The input() function*
+The find() function
+The quit() function
+
+Which of the following lines of code is a comment?
+input('Enter email ') 
+print('Enter email ')  
+#input('Enter email ')* 
+None of these
+
+At a point in coding where decisions are made, … are used.
+arithmetic statements
+conditional statements*
+philosophical statements
+manual statements 
+
+All the following are comparison operators except
+/*
+!=
+<=
+>
+
+The two types of constants are ………..
+variables and functions
+functions and values
+numeric and string*
+none of the above
+
+Constants written in either single or double quotes are called?
+Data type
+Numeric constants
+Expressions
+String*
+
+The following, name = ''Ama Asabea'' is a an …………… statement.
+assignment* 
+assignment with expression
+function
+equation
+
+A named location in memory where a program(mer) can store and retrieve values during program execution is known as ……………
+memory
+function
+variable*
+coding
+
+Which of these is as a result of a relatively smaller number of developers as against computer users?
+Mushroom effect*
+Market effect
+Salesman’s problem
+None of the above
+
+The scenario where individual fields of human endeavour create and build their own applications is known as  ……………………………. ?
+Mushroom effect
+Bottleneck problem
+Parallel development*
+None of the above
+
+The solution to “mushroom effect” or “bottleneck problem” is?
+Research
+Marketing
+Parallel development*
+None of these
+
+Which of the following is not one of the reasons why Information Studies students should study computer programming?
+Gives students competitive advantage
+For creating efficient information centre applications
+For research and development
+For hacking and breaching* 
+
+A group of instructions executed repeatedly is known as ……………………. ?
+Sequential code
+Decision
+Iteration or loop*
+None of the above
+
+A code or program or software is essentially the same thing.
+True*
+False
+True but can be debated
+False but can be debated
+
+Which of these is not one of the major components of a software?
+User interface (GUI, UI/UX)
+Arithmetic, logical and control code (main code)
+Input and output (visualization)
+Information* 
+
+Which of the following statements is not true? 
+Natural languages are spoken by human beings, while programming languages are intended for computers/digital machines
+Natural languages are used for communication between human beings while programming languages enable human beings to interact with the computers/digital machines
+Both languages share similarities, such as grammar (natural language)/syntax (programming language), and the existence of a basic structure
+Both languages have nothing in common*
+
+Pick the odd one out.
+Python
+Java
+C++
+English* 
+
+Which one of the following is not a programming text editor?
+Atom
+Python IDLE
+PyCharm
+Microsoft Word*
+
+A syntax error in Python is also called a ………………… ?
+Grammatical error
+Communication error
+Traceback*
+None of the above
+
+What is the file extension or suffix added to the name of a file containing Python code?  
+.rtf
+.docx
+.txt
+.py*
+
+Which of the following is not true about Python script?
+Ability to build a huge project in smaller units
+Ability to modify the code at any point
+Ability to reuse the code
+Ability to run the code directly without Python*
+
+The set of rules that govern the writing of instructions in the Python programming language is known as …………………
+grammar
+semantic
+syntax*
+traceback
+
+Which of the following constants is a float?
+“567”
+567
+567.80*
+“567.80”
+
+What is the result of this expression using precedence rule, 2 * 5 / 2 * 3 – 4.
+15
+10
+11*
+12
+
+The function used to prompt and receive some string (characters) from the user in Python is the ……………. function
+int()
+print()
+input()*
+type()
+
+A repetition of a set or group of instructions in a cyclical manner is referred to as a  ………………..
+function
+loop*
+sequence
+decision
+
+………………. is used to control the number of times a loop should run.
+Iteration variable*
+Keyword 
+Conditional 
+Flowchart
+
+The two main kinds of loop in Python are …………….
+do and while
+while and for*
+for and do 
+none of these
+
+While loops are called “indefinite loops” because they keep going until a logical condition becomes false.
+True* 
+False
+True but debatable
+False but debatable
+ 
+A while loop can be controlled or stopped using ……………….
+an iteration variable or break statement*
+an iteration variable only
+break statement only
+none of the above
+
+The For loops are called “definite loops” because they run for an exact number of times.
+False
+True*
+True but debatable
+False but debatable
+
+The for loop is a lot simpler and easier to work with.
+False
+True* 
+True but debatable
+False but debatable
+		
+When you make a mistake in your lines of code, Python throws a …………… error at you.
+grammatical
+syntax*
+critical
+network
+
+Instructions or a code for Python to execute can be done through
+paper and pen
+interactive mode and scripts*
+word and spreadsheet
+data and information
+
+In interactive mode, instructions are written directly to Python to run while in scripts,
+instructions are written in a file and Python runs the instruction from the file.
+True*
+False
+True but debatable
+False but debatable
+
+Python’s default programming text editor is
+IDLE*
+IDE
+Atom
+PyCharm
+
+In interactive mode, instructions are written one statement at a time and Python responds.
+True*
+False
+True but debatable
+False but debatable
+
+In the following statement: x = x + 1, x is a variable.
+True*
+False
+True but debatable
+False but debatable
+
+The print() statement is used to output the result on the monitor.
+False
+True*
+True but debatable
+False but debatable
+
+Python works through mathematical expressions implicitly using
+Precedence rule*
+Grammatical rule
+Kinetic rule
+Magic rule
+
+What will be the output of the following piece of code: e = 'hello ' + 'there'?
+
+hellothere
+hello there*
+hello + there
+none of the above
+
+There’s an error in the second line of the following code: e =  'hello' + 1 why?
+Because addition or concatenation can’t be performed on a mixture of types *
+Because they are of the same type
+Because there is no variable in it
+Because greet is not a variable
+
+In the following line: >>> x = '123', x is of the type integer.
+True
+False*
+True but debatable
+False but debatable
+
+In the following line: >>> x = 123.00, x is of the type float.
+True*
+False
+True but debatable
+False but debatable
+
+A syntax error in Python is also called?
+Grammatical error
+Communication error
+Traceback*
+None of the above
+
+The set of rules that govern the writing of instructions in the Python programming language is known as …………………
+grammar
+semantic
+Syntax*
+traceback
+
+The function used to prompt and receive some string data from the user in Python is the……………. function.
+int()
+print()
+input()*
+type()
+
+………………. is used to control the number of times a loop should run.
+Iteration variable*
+Keyword
+Conditional
+Flowchart
+
+While loops are called “indefinite loops” because they keep going until a logical
+condition becomes false.
+True*
+False
+True but debatable
+False but debatable
+
+A while loop can be controlled or stopped using?
+an iteration variable or break statement*
+an iteration variable only
+break statement only
+none of the above
+
+The For loops are called “definite loops” because they run for an exact number of times.
+False
+True*
+True but debatable
+False but debatable
+
+ A sequence of stored instructions executed by the computer is known as ……………….
+intelligence.
+program*
+creative art.
+data.
+
+The print(x) line is used to output the result stored in x on the monitor
+False 
+True*
+True but debatable
+False but debatable
+
+There are … kinds of decisions in Python programming
+ 2
+3*
+4
+5
+
+The kind of decision where if-else statements are used is called?
+Multiple decision
+Multi-way decision
+Single-way decision
+Two-way decision*
+
+The kind of decision where if-elif-else statements are used is called?
+Multiple decision
+Multi-way decision*
+Single-way decision
+Two-way decision
+
+The kind of decision where if statement only is used is called?
+Multiple decision
+Multi-way decision
+Single-way decision*
+Two-way decision
+
+A branch statement where the computer executes one set of instructions or the other is known as?
+Hallucination
+Conditional statement*
+Special statement
+Algorithm
+
+
+
