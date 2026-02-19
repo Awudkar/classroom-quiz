@@ -10,7 +10,7 @@ body { padding:20px; }
 .hidden { display:none; }
 .timer { font-size:20px; font-weight:bold; color:red; }
     {
-    user-select: none;
+    /* user-select: none; */
     -webkit-user-select: none;
     -ms-user-select: none;
     }
@@ -262,7 +262,27 @@ function parseQuiz(text) {
 }
 
 // ---------------- START QUIZ ----------------
+/*
 function startQuiz() {
+    const id = studentId.value;
+    const name = studentName.value;
+    const course = courseInput.value;
+
+    if (!id || !name || !course) return alert("Fill all fields");
+
+    document.getElementById("studentInfo").classList.add("hidden");
+    document.getElementById("quizSection").classList.remove("hidden");
+
+    currentQuestionIndex = 0;
+    score = 0;
+
+    showQuestion();
+}
+*/
+function startQuiz() {
+
+    enableSecurityMode();  // ← ADD THIS LINE
+
     const id = studentId.value;
     const name = studentName.value;
     const course = courseInput.value;
@@ -370,6 +390,7 @@ function shuffleArray(arr) {
 }
 // ---------------- SECURITY RESTRICTIONS ----------------
 
+/* 
 // Disable right click
 document.addEventListener("contextmenu", function(e) {
     e.preventDefault();
@@ -414,9 +435,43 @@ document.addEventListener("keydown", function(e) {
     }
 
 });
+*/
+// ---------------- SECURITY RESTRICTIONS ----------------
 
+function enableSecurityMode() {
+
+    // Disable right click
+    document.addEventListener("contextmenu", blockEvent);
+
+    // Disable copy / cut
+    document.addEventListener("copy", blockEvent);
+    document.addEventListener("cut", blockEvent);
+
+    // Disable certain keyboard shortcuts
+    document.addEventListener("keydown", function(e) {
+
+        if (e.ctrlKey && (
+            e.key === "c" ||
+            e.key === "x" ||
+            e.key === "u" ||
+            e.key === "s"
+        )) {
+            e.preventDefault();
+        }
+
+        if (e.key === "F12") {
+            e.preventDefault();
+        }
+    });
+
+}
+
+function blockEvent(e) {
+    e.preventDefault();
+}
 </script>
 </body>
 </html>
+
 
 
