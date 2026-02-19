@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Classroom Quiz</title>
+<title>Mock Quiz</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
 body { padding:20px; }
@@ -16,7 +16,7 @@ button { width: 100%; margin-top: 10px; }
 
 <div class="container">
 
-<h2 class="text-center mb-4">Classroom Quiz System</h2>
+<h2 class="text-center mb-4">------Mock Quiz Designed by Dr. Awudu Karim for Self-Practice------</h2>
 
 <!-- ---------------- Lecturer Panel ---------------- -->
 <div id="lecturerPanel" class="card p-3 mb-3">
@@ -51,7 +51,7 @@ let questions = [];
 let currentQuestionIndex = 0;
 let score = 0;
 let timer;
-let timeRemaining = 30; // 30 seconds per question
+let timeRemaining = 15; // 15 seconds per question
 let quizLocked = false;
 let submissions = [];
 
@@ -134,7 +134,7 @@ function showQuestion() {
     `;
 
     // Reset timer to 30s for each question
-    timeRemaining = 30;
+    timeRemaining = 15;
     updateTimerDisplay();
     clearInterval(timer);
     timer = setInterval(() => {
@@ -234,3 +234,4 @@ function shuffleArray(arr) {
 </script>
 </body>
 </html>
+
