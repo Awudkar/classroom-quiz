@@ -9,6 +9,7 @@
 body { padding:20px; }
 .hidden { display:none; }
 .timer { font-size:20px; font-weight:bold; color:red; }
+button { width: 100%; margin-top: 10px; }
 </style>
 </head>
 <body>
@@ -20,8 +21,6 @@ body { padding:20px; }
 <!-- ---------------- Lecturer Panel ---------------- -->
 <div id="lecturerPanel" class="card p-3 mb-3">
   <h4>Lecturer: Load Quiz</h4>
-  <label>Quiz Duration (minutes)</label>
-  <input type="number" id="quizTime" class="form-control mb-2" value="10" min="1">
   <button type="button" class="btn btn-primary" onclick="loadQuiz()">Load Quiz</button>
 </div>
 
@@ -48,15 +47,11 @@ body { padding:20px; }
 </div>
 
 <script>
-console.log("Script Loaded");
-
-// ---------------- Variables ----------------
 let questions = [];
 let currentQuestionIndex = 0;
 let score = 0;
 let timer;
-let timeRemaining;
-let timePerQuestion = 0;
+let timeRemaining = 30; // 30 seconds per question
 let quizLocked = false;
 let submissions = [];
 
@@ -99,7 +94,6 @@ function parseQuiz(text) {
 
 // ---------------- Start Quiz ----------------
 function startQuiz() {
-
     enableSecurityMode();
 
     const id = document.getElementById("studentId").value;
@@ -107,9 +101,6 @@ function startQuiz() {
     const course = document.getElementById("courseInput").value;
 
     if (!id || !name || !course) return alert("Fill all fields");
-
-    // Use lecturer-set time
-    timePerQuestion = parseInt(document.getElementById("quizTime").value) * 60;
 
     document.getElementById("studentInfo").classList.add("hidden");
     document.getElementById("quizSection").classList.remove("hidden");
@@ -122,7 +113,6 @@ function startQuiz() {
 
 // ---------------- Show One Question ----------------
 function showQuestion() {
-
     if (currentQuestionIndex >= questions.length) {
         endQuiz();
         return;
@@ -130,7 +120,6 @@ function showQuestion() {
 
     const q = questions[currentQuestionIndex];
     const container = document.getElementById("quizForm");
-
     container.innerHTML = `
         <div class="card p-3">
         <h5>Question ${currentQuestionIndex + 1} of ${questions.length}</h5>
@@ -144,19 +133,13 @@ function showQuestion() {
         <button class="btn btn-primary mt-3" onclick="nextQuestion()">Next</button>
     `;
 
-    startTimer();
-}
-
-// ---------------- Timer ----------------
-function startTimer() {
-    clearInterval(timer);
-    timeRemaining = timePerQuestion;
+    // Reset timer to 30s for each question
+    timeRemaining = 30;
     updateTimerDisplay();
-
+    clearInterval(timer);
     timer = setInterval(() => {
         timeRemaining--;
         updateTimerDisplay();
-
         if (timeRemaining <= 0) {
             clearInterval(timer);
             nextQuestion();
@@ -165,19 +148,17 @@ function startTimer() {
 }
 
 function updateTimerDisplay() {
-    document.getElementById("timeLeft").innerText =
-        "Time Left: " + timeRemaining + "s";
+    const minutes = Math.floor(timeRemaining/60);
+    const seconds = timeRemaining % 60;
+    document.getElementById("timeLeft").innerText = `${minutes}:${seconds.toString().padStart(2,'0')}`;
 }
 
 // ---------------- Next Question ----------------
 function nextQuestion() {
-
     const selected = document.querySelector('input[name="option"]:checked');
     const selectedIndex = selected ? parseInt(selected.value) : null;
 
-    if (selectedIndex === questions[currentQuestionIndex].answer) {
-        score++;
-    }
+    if (selectedIndex === questions[currentQuestionIndex].answer) score++;
 
     currentQuestionIndex++;
     showQuestion();
@@ -196,6 +177,9 @@ function endQuiz() {
 
     document.getElementById("resultSection").innerHTML =
         `<h3>Quiz Completed</h3>
+         <p><strong>Student ID:</strong> ${id}</p>
+         <p><strong>Name:</strong> ${name}</p>
+         <p><strong>Course:</strong> ${course}</p>
          <h4>Your Score: ${score} / ${questions.length}</h4>`;
 
     // Save submission
@@ -222,15 +206,8 @@ function enableSecurityMode() {
     document.addEventListener("contextmenu", e => e.preventDefault());
     document.addEventListener("copy", e => e.preventDefault());
     document.addEventListener("cut", e => e.preventDefault());
-
     document.addEventListener("keydown", function(e) {
-        if (e.ctrlKey && (
-            e.key === "c" ||
-            e.key === "x" ||
-            e.key === "u" ||
-            e.key === "s"
-        )) e.preventDefault();
-
+        if (e.ctrlKey && ["c","x","u","s"].includes(e.key)) e.preventDefault();
         if (e.key === "F12") e.preventDefault();
     });
 }
@@ -245,7 +222,7 @@ document.addEventListener("visibilitychange", function() {
     }
 });
 
-// ---------------- Shuffle Array ----------------
+// ---------------- Shuffle ----------------
 function shuffleArray(arr) {
     for (let i = arr.length-1; i>0; i--) {
         const j = Math.floor(Math.random() * (i+1));
