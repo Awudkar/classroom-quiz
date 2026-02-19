@@ -51,7 +51,7 @@ let questions = [];
 let currentQuestionIndex = 0;
 let score = 0;
 let timer;
-let timeRemaining = 15; // 15 seconds per question
+let timeRemaining = 20; // 20 seconds per question
 let quizLocked = false;
 let submissions = [];
 
@@ -134,7 +134,7 @@ function showQuestion() {
     `;
 
     // Reset timer to 15s for each question
-    timeRemaining = 15;
+    timeRemaining = 20;
     updateTimerDisplay();
     clearInterval(timer);
     timer = setInterval(() => {
@@ -234,5 +234,6 @@ function shuffleArray(arr) {
 </script>
 </body>
 </html>
+
 
 
