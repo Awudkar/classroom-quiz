@@ -57,164 +57,13 @@ body { padding:20px; }
 </div>
 
 <script>
-/* 
-let questions = [];
-let timer;
-let timeRemaining;
-let submissions = [];
-
-// ------------------ Load Quiz from quiz.txt ------------------
-function loadQuiz() {
-    fetch('quiz.txt')
-    .then(response => response.text())
-    .then(data => {
-        questions = parseQuiz(data);
-        document.getElementById("studentInfo").classList.remove("hidden");
-        document.getElementById("lecturerPanel").classList.add("hidden");
-    })
-    .catch(err => alert("Could not load quiz: " + err));
-}
-
-// ------------------ Parse Quiz ------------------
-function parseQuiz(text) {
-    const blocks = text.trim().split(/\n\s*\n/);
-    const qs = [];
-
-    blocks.forEach(block => {
-        const lines = block.split("\n").map(l => l.trim()).filter(l => l !== "");
-        if (lines.length !== 5) return; // 1 question + 4 options
-
-        const questionText = lines[0].replace(/^Q\d+\.\s*/, "");
-        let opts = [];
-        let correctText = "";
-
-        lines.slice(1).forEach(line => {
-            if (line.includes("*")) {
-                correctText = line.replace("*", "").trim();
-                opts.push(correctText);
-            } else {
-                opts.push(line.trim());
-            }
-        });
-
-        opts = shuffleArray(opts);
-        const correctIndex = opts.indexOf(correctText);
-
-        qs.push({ question: questionText, options: opts, answer: correctIndex });
-    });
-
-    return shuffleArray(qs);
-}
-
-// ------------------ Start Quiz ------------------
-function startQuiz() {
-    const studentId = document.getElementById("studentId").value;
-    const studentName = document.getElementById("studentName").value;
-    const course = document.getElementById("course").value;
-
-    if (!studentId || !studentName || !course) return alert("Fill all fields");
-
-    document.getElementById("studentInfo").classList.add("hidden");
-    document.getElementById("quizSection").classList.remove("hidden");
-    document.getElementById("resultSection").classList.add("hidden");
-
-    renderQuiz();
-
-    timeRemaining = parseInt(document.getElementById("quizTime").value) * 60;
-    document.getElementById("timeLeft").innerText =
-        `${Math.floor(timeRemaining/60)}:${(timeRemaining%60).toString().padStart(2,'0')}`;
-
-    timer = setInterval(() => {
-        timeRemaining--;
-        document.getElementById("timeLeft").innerText =
-            `${Math.floor(timeRemaining/60)}:${(timeRemaining%60).toString().padStart(2,'0')}`;
-        if (timeRemaining <= 0) {
-            clearInterval(timer);
-            submitQuiz(studentId, studentName, course);
-        }
-    }, 1000);
-}
-
-// ------------------ Render Quiz ------------------
-function renderQuiz() {
-    const container = document.getElementById("quizForm");
-    container.innerHTML = "";
-
-    questions.forEach((q, i) => {
-        let html = `<div class="card p-3 mb-2"><strong>${i+1}. ${q.question}</strong><br>`;
-        q.options.forEach((opt, j) => {
-            const letter = String.fromCharCode(97 + j);
-            html += `<div>
-<input type="radio" name="question${i}" value="${j}"> ${letter}. ${opt}
-</div>`;
-        });
-        html += `</div>`;
-        container.innerHTML += html;
-    });
-}
-
-// ------------------ Submit Quiz ------------------
-function submitQuiz(studentId, studentName, course) {
-    clearInterval(timer);
-
-    let score = 0;
-    let resultHTML = "";
-
-    questions.forEach((q, i) => {
-        const selected = document.querySelector(`input[name="question${i}"]:checked`);
-        const selectedIndex = selected ? parseInt(selected.value) : null;
-        const correctAnswer = q.options[q.answer];
-        const userAnswer = selectedIndex !== null ? q.options[selectedIndex] : "Not Answered";
-
-        if (selectedIndex === q.answer) score++;
-
-        resultHTML += `<div class="card p-2 mb-2">
-<strong>${i+1}. ${q.question}</strong><br>
-Your Answer: ${userAnswer}<br>
-Correct: ${correctAnswer}
-</div>`;
-    });
-
-    document.getElementById("resultSection").classList.remove("hidden");
-    document.getElementById("quizSection").classList.add("hidden");
-    document.getElementById("resultSection").innerHTML = `<h4>Score: ${score} / ${questions.length}</h4>` + resultHTML;
-
-    const percentage = ((score / questions.length) * 100).toFixed(2);
-    submissions.push({ id: studentId, name: studentName, course: course, score, total: questions.length, percentage });
-    document.getElementById("downloadBtn").classList.remove("hidden");
-
-    document.querySelectorAll("input[type=radio]").forEach(r => r.disabled = true);
-}
-
-// ------------------ Download CSV ------------------
-function downloadCSV() {
-    let csv = "StudentID,Name,Course,Score,Total,Percentage\n";
-    submissions.forEach(s => {
-        csv += `${s.id},${s.name},${s.course},${s.score},${s.total},${s.percentage}%\n`;
-    });
-    const blob = new Blob([csv], {type:"text/csv"});
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "quiz_results.csv";
-    link.click();
-}
-
-// ------------------ Shuffle Array ------------------
-function shuffleArray(arr) {
-    for (let i = arr.length-1; i>0; i--) {
-        const j = Math.floor(Math.random() * (i+1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-} */
-
-<script>
+console.log("Script Loaded");
 
 let questions = [];
 let currentQuestionIndex = 0;
 let score = 0;
 let timer;
-let timePerQuestion = 30; // seconds per question
+let timePerQuestion = 30;
 let timeRemaining;
 let quizLocked = false;
 
@@ -262,30 +111,13 @@ function parseQuiz(text) {
 }
 
 // ---------------- START QUIZ ----------------
-/*
-function startQuiz() {
-    const id = studentId.value;
-    const name = studentName.value;
-    const course = courseInput.value;
-
-    if (!id || !name || !course) return alert("Fill all fields");
-
-    document.getElementById("studentInfo").classList.add("hidden");
-    document.getElementById("quizSection").classList.remove("hidden");
-
-    currentQuestionIndex = 0;
-    score = 0;
-
-    showQuestion();
-}
-*/
 function startQuiz() {
 
-    enableSecurityMode();  // ← ADD THIS LINE
+    enableSecurityMode();
 
-    const id = studentId.value;
-    const name = studentName.value;
-    const course = courseInput.value;
+    const id = document.getElementById("studentId").value;
+    const name = document.getElementById("studentName").value;
+    const course = document.getElementById("course").value;
 
     if (!id || !name || !course) return alert("Fill all fields");
 
@@ -300,6 +132,7 @@ function startQuiz() {
 
 // ---------------- SHOW QUESTION ----------------
 function showQuestion() {
+
     if (currentQuestionIndex >= questions.length) {
         endQuiz();
         return;
@@ -348,7 +181,6 @@ function updateTimerDisplay() {
 
 // ---------------- NEXT QUESTION ----------------
 function nextQuestion() {
-    if (quizLocked) return;
 
     const selected = document.querySelector('input[name="option"]:checked');
     const selectedIndex = selected ? parseInt(selected.value) : null;
@@ -380,74 +212,13 @@ document.addEventListener("visibilitychange", function() {
     }
 });
 
-// ---------------- SHUFFLE ----------------
-function shuffleArray(arr) {
-    for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-}
-// ---------------- SECURITY RESTRICTIONS ----------------
-
-/* 
-// Disable right click
-document.addEventListener("contextmenu", function(e) {
-    e.preventDefault();
-});
-
-// Disable copy
-document.addEventListener("copy", function(e) {
-    e.preventDefault();
-});
-
-// Disable paste
-document.addEventListener("paste", function(e) {
-    e.preventDefault();
-});
-
-// Disable cut
-document.addEventListener("cut", function(e) {
-    e.preventDefault();
-});
-
-// Disable text selection
-document.addEventListener("selectstart", function(e) {
-    e.preventDefault();
-});
-
-// Disable common keyboard shortcuts
-document.addEventListener("keydown", function(e) {
-
-    // Ctrl+C, Ctrl+V, Ctrl+X, Ctrl+U, Ctrl+S
-    if (e.ctrlKey && 
-       (e.key === "c" || 
-        e.key === "v" || 
-        e.key === "x" || 
-        e.key === "u" || 
-        e.key === "s")) {
-        e.preventDefault();
-    }
-
-    // F12 (Dev tools)
-    if (e.key === "F12") {
-        e.preventDefault();
-    }
-
-});
-*/
-// ---------------- SECURITY RESTRICTIONS ----------------
-
+// ---------------- SECURITY MODE ----------------
 function enableSecurityMode() {
 
-    // Disable right click
-    document.addEventListener("contextmenu", blockEvent);
+    document.addEventListener("contextmenu", e => e.preventDefault());
+    document.addEventListener("copy", e => e.preventDefault());
+    document.addEventListener("cut", e => e.preventDefault());
 
-    // Disable copy / cut
-    document.addEventListener("copy", blockEvent);
-    document.addEventListener("cut", blockEvent);
-
-    // Disable certain keyboard shortcuts
     document.addEventListener("keydown", function(e) {
 
         if (e.ctrlKey && (
@@ -462,16 +233,22 @@ function enableSecurityMode() {
         if (e.key === "F12") {
             e.preventDefault();
         }
-    });
 
+    });
 }
 
-function blockEvent(e) {
-    e.preventDefault();
+// ---------------- SHUFFLE ----------------
+function shuffleArray(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
 }
 </script>
 </body>
 </html>
+
 
 
 
