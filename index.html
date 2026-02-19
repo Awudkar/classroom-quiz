@@ -9,6 +9,11 @@
 body { padding:20px; }
 .hidden { display:none; }
 .timer { font-size:20px; font-weight:bold; color:red; }
+    {
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    }
 </style>
 </head>
 <body>
@@ -27,7 +32,7 @@ body { padding:20px; }
 <h4>Student Information</h4>
 <input type="text" id="studentId" placeholder="Student ID" class="form-control mb-2" required>
 <input type="text" id="studentName" placeholder="Full Name" class="form-control mb-2" required>
-<input type="text" id="course" placeholder="Course" class="form-control mb-2" required>
+<input type="text" id="courseInput" placeholder="Course" class="form-control mb-2" required>
 <label>Time (minutes)</label>
 <input type="number" id="quizTime" class="form-control mb-2" value="10">
 <button type="button" class="btn btn-success" onclick="startQuiz()">Start Quiz</button>
@@ -52,6 +57,7 @@ body { padding:20px; }
 </div>
 
 <script>
+/* 
 let questions = [];
 let timer;
 let timeRemaining;
@@ -200,8 +206,217 @@ function shuffleArray(arr) {
         [arr[i], arr[j]] = [arr[j], arr[i]];
     }
     return arr;
+} */
+
+<script>
+
+let questions = [];
+let currentQuestionIndex = 0;
+let score = 0;
+let timer;
+let timePerQuestion = 30; // seconds per question
+let timeRemaining;
+let quizLocked = false;
+
+// ---------------- LOAD QUIZ ----------------
+function loadQuiz() {
+    fetch('quiz.txt')
+    .then(response => response.text())
+    .then(data => {
+        questions = parseQuiz(data);
+        document.getElementById("studentInfo").classList.remove("hidden");
+        document.getElementById("lecturerPanel").classList.add("hidden");
+    })
+    .catch(err => alert("Could not load quiz"));
 }
+
+// ---------------- PARSE QUIZ ----------------
+function parseQuiz(text) {
+    const blocks = text.trim().split(/\n\s*\n/);
+    let qs = [];
+
+    blocks.forEach(block => {
+        const lines = block.split("\n").map(l => l.trim()).filter(l => l !== "");
+        if (lines.length !== 5) return;
+
+        const questionText = lines[0].replace(/^Q\d+\.\s*/, "");
+        let opts = [];
+        let correctText = "";
+
+        lines.slice(1).forEach(line => {
+            if (line.includes("*")) {
+                correctText = line.replace("*","").trim();
+                opts.push(correctText);
+            } else {
+                opts.push(line.trim());
+            }
+        });
+
+        opts = shuffleArray(opts);
+        const correctIndex = opts.indexOf(correctText);
+
+        qs.push({ question: questionText, options: opts, answer: correctIndex });
+    });
+
+    return shuffleArray(qs);
+}
+
+// ---------------- START QUIZ ----------------
+function startQuiz() {
+    const id = studentId.value;
+    const name = studentName.value;
+    const course = courseInput.value;
+
+    if (!id || !name || !course) return alert("Fill all fields");
+
+    document.getElementById("studentInfo").classList.add("hidden");
+    document.getElementById("quizSection").classList.remove("hidden");
+
+    currentQuestionIndex = 0;
+    score = 0;
+
+    showQuestion();
+}
+
+// ---------------- SHOW QUESTION ----------------
+function showQuestion() {
+    if (currentQuestionIndex >= questions.length) {
+        endQuiz();
+        return;
+    }
+
+    const q = questions[currentQuestionIndex];
+    const container = document.getElementById("quizForm");
+
+    container.innerHTML = `
+        <div class="card p-3">
+        <h5>Question ${currentQuestionIndex + 1} of ${questions.length}</h5>
+        <strong>${q.question}</strong><br><br>
+        ${q.options.map((opt, i) =>
+            `<div>
+             <input type="radio" name="option" value="${i}"> ${opt}
+             </div>`
+        ).join("")}
+        </div>
+        <button class="btn btn-primary mt-3" onclick="nextQuestion()">Next</button>
+    `;
+
+    startTimer();
+}
+
+// ---------------- TIMER ----------------
+function startTimer() {
+    clearInterval(timer);
+    timeRemaining = timePerQuestion;
+    updateTimerDisplay();
+
+    timer = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+
+        if (timeRemaining <= 0) {
+            clearInterval(timer);
+            nextQuestion();
+        }
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    document.getElementById("timeLeft").innerText =
+        "Time Left: " + timeRemaining + "s";
+}
+
+// ---------------- NEXT QUESTION ----------------
+function nextQuestion() {
+    if (quizLocked) return;
+
+    const selected = document.querySelector('input[name="option"]:checked');
+    const selectedIndex = selected ? parseInt(selected.value) : null;
+
+    if (selectedIndex === questions[currentQuestionIndex].answer) {
+        score++;
+    }
+
+    currentQuestionIndex++;
+    showQuestion();
+}
+
+// ---------------- END QUIZ ----------------
+function endQuiz() {
+    clearInterval(timer);
+
+    document.getElementById("quizSection").innerHTML =
+        `<h3>Quiz Completed</h3>
+         <h4>Your Score: ${score} / ${questions.length}</h4>`;
+}
+
+// ---------------- TAB SWITCH DETECTION ----------------
+document.addEventListener("visibilitychange", function() {
+    if (document.hidden && !quizLocked) {
+        quizLocked = true;
+        clearInterval(timer);
+        document.body.innerHTML =
+            "<h2 style='color:red;text-align:center;margin-top:100px;'>Tab Switching Detected. Quiz Locked.</h2>";
+    }
+});
+
+// ---------------- SHUFFLE ----------------
+function shuffleArray(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+// ---------------- SECURITY RESTRICTIONS ----------------
+
+// Disable right click
+document.addEventListener("contextmenu", function(e) {
+    e.preventDefault();
+});
+
+// Disable copy
+document.addEventListener("copy", function(e) {
+    e.preventDefault();
+});
+
+// Disable paste
+document.addEventListener("paste", function(e) {
+    e.preventDefault();
+});
+
+// Disable cut
+document.addEventListener("cut", function(e) {
+    e.preventDefault();
+});
+
+// Disable text selection
+document.addEventListener("selectstart", function(e) {
+    e.preventDefault();
+});
+
+// Disable common keyboard shortcuts
+document.addEventListener("keydown", function(e) {
+
+    // Ctrl+C, Ctrl+V, Ctrl+X, Ctrl+U, Ctrl+S
+    if (e.ctrlKey && 
+       (e.key === "c" || 
+        e.key === "v" || 
+        e.key === "x" || 
+        e.key === "u" || 
+        e.key === "s")) {
+        e.preventDefault();
+    }
+
+    // F12 (Dev tools)
+    if (e.key === "F12") {
+        e.preventDefault();
+    }
+
+});
+
 </script>
 </body>
 </html>
+
 
